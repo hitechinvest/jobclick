@@ -1,0 +1,107 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../../app/**/*.php';
+
+@theme {
+    --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Unbounded', 'Manrope', ui-sans-serif, system-ui, sans-serif;
+
+    --color-brand-50: #f5f3ff;
+    --color-brand-100: #ede9fe;
+    --color-brand-200: #ddd6fe;
+    --color-brand-300: #c4b5fd;
+    --color-brand-400: #a78bfa;
+    --color-brand-500: #8b5cf6;
+    --color-brand-600: #7c3aed;
+    --color-brand-700: #6d28d9;
+    --color-brand-800: #5b21b6;
+    --color-brand-900: #4c1d95;
+    --color-ink: #1b1037;
+
+    --animate-float: float 7s ease-in-out infinite;
+    --animate-float-slow: float 11s ease-in-out infinite;
+    --animate-gradient: gradient 10s ease infinite;
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-18px) rotate(3deg); }
+    }
+    @keyframes gradient {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+}
+
+@layer base {
+    html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+    body { @apply bg-[#faf8ff] text-ink; }
+    [x-cloak] { display: none !important; }
+}
+
+@utility btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 font-bold transition duration-200 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer; 
+}
+@utility btn-primary {
+    @apply btn bg-gradient-to-r from-fuchsia-600 via-violet-600 to-indigo-600 text-white shadow-lg shadow-fuchsia-500/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-fuchsia-500/40; 
+}
+@utility btn-hot {
+    @apply btn bg-gradient-to-r from-orange-400 via-pink-500 to-fuchsia-600 text-white shadow-lg shadow-pink-500/30 hover:-translate-y-0.5 hover:shadow-xl; 
+}
+@utility btn-light {
+    @apply btn bg-white text-ink ring-1 ring-black/5 shadow-sm hover:bg-brand-50; 
+}
+@utility btn-ghost {
+    @apply btn text-brand-700 hover:bg-brand-50; 
+}
+@utility btn-danger {
+    @apply btn bg-rose-50 text-rose-700 hover:bg-rose-100; 
+}
+@utility btn-sm {
+    @apply px-3.5 py-2 text-sm rounded-xl; 
+}
+@utility card {
+    @apply rounded-3xl bg-white p-6 shadow-[0_10px_40px_-12px_rgba(76,29,149,0.18)] ring-1 ring-black/[0.04]; 
+}
+@utility label {
+    @apply mb-1.5 block text-sm font-bold text-ink/80; 
+}
+@utility input {
+    @apply w-full rounded-2xl border-0 bg-brand-50/60 px-4 py-3 text-ink ring-1 ring-brand-200/70 placeholder:text-ink/35 transition focus:bg-white focus:ring-2 focus:ring-fuchsia-500 focus:outline-none; 
+}
+@utility hint {
+    @apply mt-1.5 text-xs text-ink/50; 
+}
+@utility error {
+    @apply mt-1.5 text-sm font-semibold text-rose-600; 
+}
+@utility chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-semibold; 
+}
+@utility gradient-text {
+    @apply bg-gradient-to-r from-fuchsia-600 via-pink-500 to-orange-400 bg-clip-text text-transparent; 
+}
+@utility badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold; 
+}
+@utility badge-gray {
+    @apply badge bg-slate-100 text-slate-600; 
+}
+@utility badge-warning {
+    @apply badge bg-amber-100 text-amber-800; 
+}
+@utility badge-info {
+    @apply badge bg-sky-100 text-sky-800; 
+}
+@utility badge-success {
+    @apply badge bg-emerald-100 text-emerald-800; 
+}
+@utility badge-danger {
+    @apply badge bg-rose-100 text-rose-700; 
+}
+@utility tip {
+    @apply relative inline-flex h-5 w-5 cursor-help items-center justify-center rounded-full bg-brand-100 text-xs font-black text-brand-700; 
+}
