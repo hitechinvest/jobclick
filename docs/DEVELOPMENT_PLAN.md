@@ -318,7 +318,9 @@ DailyStat(campaign, platform, date, impressions, clicks_network, spend_network, 
 ModerationLog(id, campaign, action, actor, reason_code, comment, created_at)
 IntegrationSetting(key, value encrypted, updated_by, updated_at)      # deepseek_api_key, qwen_*, dadata_*, yookassa_*
 CompanyRequisites(singleton: наши реквизиты: name, inn, kpp, ogrn, address, bank, bik, account, corr_account,
-                  director, accountant, logo, signature_stamp_image, invoice_prefix, vat_mode)
+                  director, accountant, logo, signature_stamp_image, invoice_prefix, tax_system, vat_code)
+   # tax_system — система налогообложения для чеков ЮKassa (osn / usn_income / usn_income_outcome / patent и др.),
+   # vat_code — ставка НДС для позиций чека, по умолчанию 1 («без НДС»); оба задаются в админке
 Tariff(cpc_moscow_spb, cpc_other, min_total_budget, min_daily_budget, recommended_budget_days,
        forecast_tolerance_pct)
 EmailCode(email, code_hash, expires_at, attempts, used)
@@ -503,8 +505,9 @@ EmailCode(email, code_hash, expires_at, attempts, used)
   баланс пересчитывается транзакционно (`lockForUpdate()` внутри `DB::transaction`).
 - **ЮKassa** (согласовано: договор на юрлицо, приём платежей с чеками 54-ФЗ):
   - настройки в админке: shopId, секретный ключ, режим тест/прод, URL возврата, включённые способы оплаты
-    (банковская карта, СБП, ЮMoney, Сбер Pay, Т-Pay), чеки 54-ФЗ: включены, система налогообложения
-    (выбор), ставка НДС для позиций чека — **«без НДС»** (`vat_code = 1`), признак предмета расчёта «услуга»,
+    (банковская карта, СБП, ЮMoney, Сбер Pay, Т-Pay), чеки 54-ФЗ: включены; система налогообложения
+    (`tax_system_code`) и ставка НДС (`vat_code`, по умолчанию 1 — «без НДС») берутся из реквизитов компании,
+    которые задаются в админке, а не из кода; признак предмета расчёта «услуга»,
     признак способа расчёта «полная предоплата»; e-mail плательщика в чек берём из аккаунта;
   - поток: `POST /payments` с `capture: true`, `idempotence-key`, `confirmation.type=redirect`,
     сохраняем `provider_payment_id`, редирект; **источник истины — webhook** `payment.succeeded` /
@@ -566,7 +569,7 @@ EmailCode(email, code_hash, expires_at, attempts, used)
   - DaData: `api_key`, `secret_key` (для стандартизации, если понадобится);
   - ЮKassa / ЮMoney: см. 7.4; Яндекс ID и Mail.ru ID: client_id/secret; SMTP; Telegram-бот для алертов админу.
 - **Реквизиты моей компании** (для счетов): все поля из `CompanyRequisites`, логотип, подпись/печать,
-  префикс и счётчик номеров, система налогообложения (НДС не применяется, фиксировано «Без НДС»), текст оферты (ссылка).
+  префикс и счётчик номеров, **система налогообложения** (выпадающий список по справочнику ЮKassa: ОСН, УСН доходы, УСН доходы минус расходы, патент и др.) и ставка НДС (по умолчанию «без НДС») — оба передаются в чеки ЮKassa и печатаются в шапке счёта, текст оферты (ссылка).
 - **Тарифы и лимиты**: CPC Москва/СПб, CPC другие, список городов «дорогого» пояса, минимальный общий и
   дневной бюджет, рекомендуемый бюджет, минимумы по площадкам, допуск прогноза, лимиты генераций.
 - **Модерация** и **Размещение** — см. 7.3. **Счета** — подтверждение оплаты. **Транзакции** — ручные
@@ -660,7 +663,6 @@ EmailCode(email, code_hash, expires_at, attempts, used)
    («от JobClick» или только компания).
 5. Какой e-mail-провайдер и Telegram-канал для алертов админу.
 6. Нужен ли калькулятор прогноза на лендинге без регистрации.
-7. Система налогообложения компании (УСН?) — нужна для чеков ЮKassa и шапки счёта.
 
 ---
 
@@ -702,3 +704,4 @@ EmailCode(email, code_hash, expires_at, attempts, used)
 | 2026-11-04 | Минимальный общий бюджет 3 000 ₽, минимальный дневной лимит 500 ₽ (редактируются в админке) |
 | 2026-11-04 | Онлайн-оплата: ЮKassa на юрлицо с чеками 54-ФЗ; кошелёк ЮMoney не используется |
 | 2026-11-04 | НДС не применяется: счета и чеки «Без НДС» |
+| 2026-11-04 | Система налогообложения не фиксируется в коде, а задаётся в админке в реквизитах компании и передаётся в чеки ЮKassa |
