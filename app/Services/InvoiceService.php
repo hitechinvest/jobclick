@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Mail\InvoiceMail;
+use App\Models\AdminAlert;
 use App\Models\Campaign;
 use App\Models\Invoice;
 use App\Models\User;
@@ -146,7 +147,7 @@ class InvoiceService
             $this->billing->topup($invoice->user, (float) $invoice->amount, $invoice, 'Оплата по счёту '.$invoice->number, $adminId);
         });
 
-        \App\Models\AdminAlert::where('type', 'invoice')->where('url', url('/admin/invoices/'.$invoice->id))->update(['resolved_at' => now()]);
+        AdminAlert::where('type', 'invoice')->where('url', url('/admin/invoices/'.$invoice->id))->update(['resolved_at' => now()]);
         $this->campaigns->processPendingPayments($invoice->user);
     }
 }

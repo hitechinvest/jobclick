@@ -2,8 +2,21 @@
 
 namespace App\Enums;
 
-enum CampaignStatus: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasLabel;
+
+enum CampaignStatus: string implements HasColor, HasLabel
 {
+    public function getLabel(): string
+    {
+        return $this->label();
+    }
+
+    public function getColor(): string
+    {
+        return $this->color();
+    }
+
     case Draft = 'draft';
     case PendingPayment = 'pending_payment';
     case Moderation = 'moderation';

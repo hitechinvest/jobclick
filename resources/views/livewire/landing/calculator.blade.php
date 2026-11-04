@@ -1,6 +1,6 @@
 @php use App\Support\Money; @endphp
 <div class="relative rounded-[2rem] bg-white/95 p-6 shadow-2xl shadow-fuchsia-900/30 ring-1 ring-white/50 backdrop-blur sm:p-8">
-    <div class="absolute -right-3 -top-4 rotate-6 rounded-2xl bg-yellow-300 px-3 py-1.5 font-display text-xs font-black text-ink shadow-lg">Данные Яндекс Вордстата</div>
+    <div class="absolute -top-4 right-2 rotate-6 rounded-2xl bg-yellow-300 px-3 py-1.5 sm:-right-3 font-display text-xs font-black text-ink shadow-lg">Данные Яндекс Вордстата</div>
     <h2 class="font-display text-xl font-black sm:text-2xl">Сколько кандидатов вы получите?</h2>
     <p class="mt-1 text-sm text-ink/60">Считаем по реальным запросам людей, которые ищут такую работу.</p>
 

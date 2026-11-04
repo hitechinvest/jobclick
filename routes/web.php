@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CreativesZipController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PaymentReturnController;
@@ -9,7 +10,10 @@ use App\Http\Controllers\YooKassaWebhookController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Cabinet;
 use App\Livewire\Wizard\CampaignWizard;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/offer', [PageController::class, 'offer'])->name('offer');
@@ -17,11 +21,11 @@ Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 
 // Трекинг-ссылка из объявлений: без сессий и CSRF
 Route::get('/go/{slug}', TrackingController::class)->name('track')
-    ->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class, \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+    ->withoutMiddleware([StartSession::class, ShareErrorsFromSession::class,
+        VerifyCsrfToken::class]);
 
 Route::post('/webhooks/yookassa', YooKassaWebhookController::class)->name('webhooks.yookassa')
-    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class]);
+    ->withoutMiddleware([VerifyCsrfToken::class]);
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
@@ -45,3 +49,6 @@ Route::middleware('auth')->prefix('cabinet')->name('cabinet.')->group(function (
 });
 
 Route::get('/payments/{payment}/return', PaymentReturnController::class)->name('payments.return')->middleware('auth');
+
+Route::get('/admin-tools/campaigns/{campaign}/creatives.zip', CreativesZipController::class)
+    ->name('admin.campaigns.creatives')->middleware('auth');

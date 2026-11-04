@@ -2,8 +2,15 @@
 
 namespace App\Enums;
 
-enum Platform: string
+use Filament\Support\Contracts\HasLabel;
+
+enum Platform: string implements HasLabel
 {
+    public function getLabel(): string
+    {
+        return $this->label();
+    }
+
     case YandexSearch = 'yandex_search';
     case YandexRsya = 'yandex_rsya';
     case Vkontakte = 'vkontakte';

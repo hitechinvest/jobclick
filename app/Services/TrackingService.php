@@ -37,7 +37,7 @@ class TrackingService
 
         $billable = $campaign->status === CampaignStatus::Active
             && $ua !== '' && ! preg_match(self::BOT_PATTERN, $ua)
-            && ! ClickEvent::where('campaign_id', $campaign->id)->where('ip_hash', $ipHash)
+            && ! ClickEvent::where('campaign_id', $campaign->id)->where('ip_hash', $ipHash)->where('billable', true)
                 ->where('created_at', '>=', now()->subMinutes(self::DEDUP_MINUTES))->exists()
             && ! ($campaign->daily_budget && $campaign->spentToday() + (float) $campaign->cpc > (float) $campaign->daily_budget + 0.001);
 

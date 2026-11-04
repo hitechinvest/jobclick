@@ -9,10 +9,10 @@
     <a href="{{ route('cabinet.campaigns') }}" wire:navigate class="text-sm font-bold text-brand-700">← Все кампании</a>
 
     <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
+        <div class="min-w-0 max-w-full">
             <x-status-badge :status="$c->status" />
             <h1 class="mt-2 font-display text-2xl font-black sm:text-3xl">{{ $c->displayTitle() }}</h1>
-            @if ($c->source_url)<a href="{{ $c->source_url }}" target="_blank" rel="noopener" class="mt-1 inline-block max-w-full truncate text-sm font-semibold text-brand-700 hover:underline">{{ $c->source_url }}</a>@endif
+            @if ($c->source_url)<a href="{{ $c->source_url }}" target="_blank" rel="noopener" class="mt-1 block max-w-full truncate text-sm font-semibold text-brand-700 hover:underline">{{ $c->source_url }}</a>@endif
         </div>
         <div class="flex flex-wrap gap-2">
             @if ($c->status->isEditable())
@@ -57,7 +57,7 @@
     @endif
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div class="card"><div class="text-sm font-bold text-ink/50">Кликов</div><div class="mt-1 font-display text-3xl font-black text-pink-600">{{ Money::number($c->clicks) }}</div><div class="text-xs text-ink/50">прогноз ≈ {{ Money::number($c->forecast_clicks) }}</div></div>
+        <div class="card"><div class="text-sm font-bold text-ink/50">Клики</div><div class="mt-1 font-display text-3xl font-black text-pink-600">{{ Money::number($c->clicks) }}</div><div class="text-xs text-ink/50">прогноз ≈ {{ Money::number($c->forecast_clicks) }}</div></div>
         <div class="card"><div class="text-sm font-bold text-ink/50">Потрачено</div><div class="mt-1 font-display text-3xl font-black text-orange-500">{{ Money::format($c->spent) }}</div><div class="text-xs text-ink/50">из {{ Money::format($c->total_budget ?? 0) }}</div></div>
         <div class="card"><div class="text-sm font-bold text-ink/50">Остаток бюджета</div><div class="mt-1 font-display text-3xl font-black text-brand-700">{{ Money::format($c->reserved) }}</div><div class="text-xs text-ink/50">цена клика {{ Money::format($c->cpc ?? 0) }}</div></div>
         <div class="card"><div class="text-sm font-bold text-ink/50">Дневной лимит</div><div class="mt-1 font-display text-3xl font-black">{{ $c->daily_budget ? Money::format($c->daily_budget) : '—' }}</div><div class="text-xs text-ink/50">сегодня {{ Money::format($c->spentToday()) }}</div></div>
@@ -75,7 +75,7 @@
         </div>
     @endif
 
-    <div class="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+    <div class="grid items-start gap-6 lg:grid-cols-[1.5fr_1fr]">
         <div class="card">
             <h2 class="font-display text-lg font-black">Клики за 14 дней</h2>
             <div class="mt-6 flex h-44 items-end gap-1.5">
@@ -97,7 +97,7 @@
                             <span class="font-bold">{{ $p->platform->label() }}</span>
                             <span class="badge-{{ $p->status === 'placed' ? 'success' : ($p->status === 'planned' ? 'info' : 'gray') }}">{{ $p->statusLabel() }}</span>
                         </div>
-                        <div class="mt-1 text-sm text-ink/60">{{ $byPlatform[$p->platform->value] ?? 0 }} кликов @if($p->erid) · ERID <span class="font-mono">{{ $p->erid }}</span>@endif</div>
+                        <div class="mt-1 text-sm text-ink/60">@php $n = $byPlatform[$p->platform->value] ?? 0; @endphp{{ $n }} {{ Money::plural($n, 'клик', 'клика', 'кликов') }} @if($p->erid) · ERID <span class="font-mono">{{ $p->erid }}</span>@endif</div>
                     </div>
                 @empty
                     @foreach ($c->platformEnums() as $platform)
@@ -108,7 +108,7 @@
         </div>
     </div>
 
-    <div class="grid gap-6 lg:grid-cols-2">
+    <div class="grid items-start gap-6 lg:grid-cols-2">
         <div class="card">
             <h2 class="font-display text-lg font-black">Объявление</h2>
             @php $preview = $creatives->first()?->firstWhere('format', '16:9'); @endphp

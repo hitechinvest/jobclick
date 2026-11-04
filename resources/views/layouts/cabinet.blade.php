@@ -40,7 +40,7 @@
         </form>
     </aside>
 
-    <div class="flex-1">
+    <div class="min-w-0 flex-1">
         <header class="sticky top-0 z-30 flex items-center justify-between gap-3 bg-white/90 px-4 py-3 shadow-sm backdrop-blur lg:hidden">
             <x-logo />
             <div class="flex items-center gap-2">

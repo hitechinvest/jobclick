@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\Models\Setting;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
 
@@ -192,6 +193,26 @@ class Settings
         }
 
         return static::$cache = $rows;
+    }
+
+    /** Применяет SMTP из настроек к конфигу почты (свой сервер заказчика). */
+    public static function applyMailConfig(): void
+    {
+        if (static::has('mail.host')) {
+            config([
+                'mail.default' => 'smtp',
+                'mail.mailers.smtp.scheme' => static::get('mail.scheme') ?: null,
+                'mail.mailers.smtp.host' => static::get('mail.host'),
+                'mail.mailers.smtp.port' => static::int('mail.port'),
+                'mail.mailers.smtp.username' => static::get('mail.username'),
+                'mail.mailers.smtp.password' => static::get('mail.password'),
+            ]);
+            app()->forgetInstance('mail.manager');
+            Mail::clearResolvedInstances();
+        }
+        if (static::has('mail.from_address')) {
+            config(['mail.from.address' => static::get('mail.from_address'), 'mail.from.name' => static::get('mail.from_name')]);
+        }
     }
 
     public static function flush(): void

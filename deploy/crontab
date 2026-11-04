@@ -1,0 +1,4 @@
+# crontab -u www-data -e
+* * * * * cd /var/www/jobclick && php artisan schedule:run >> /dev/null 2>&1
+# Ночной бэкап базы (хранить 14 дней)
+20 3 * * * mysqldump --single-transaction jobclick | gzip > /var/backups/jobclick/db-$(date +\%F).sql.gz && find /var/backups/jobclick -mtime +14 -delete

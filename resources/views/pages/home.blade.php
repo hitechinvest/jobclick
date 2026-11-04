@@ -15,28 +15,28 @@
         <div class="pointer-events-none absolute bottom-16 left-8 hidden text-5xl lg:block animate-float-slow">⚡</div>
 
         <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1.1fr_1fr]">
-            <div>
+            <div class="min-w-0">
                 <span class="chip bg-white/15 text-white ring-1 ring-white/30 backdrop-blur">🔥 Кандидаты уже завтра — без агентства</span>
-                <h1 class="mt-6 font-display text-4xl font-black leading-[1.05] sm:text-6xl">
-                    Закройте вакансию <span class="relative whitespace-nowrap text-yellow-300">в 3 раза быстрее<svg class="absolute -bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none"><path d="M2 9c60-6 180-8 296-2" stroke="#fde047" stroke-width="5" stroke-linecap="round"/></svg></span>
+                <h1 class="mt-6 font-display text-[2.1rem] font-black leading-[1.08] sm:text-6xl">
+                    Закройте вакансию <span class="relative text-yellow-300 sm:whitespace-nowrap">в 3 раза быстрее<svg class="absolute -bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none"><path d="M2 9c60-6 180-8 296-2" stroke="#fde047" stroke-width="5" stroke-linecap="round"/></svg></span>
                 </h1>
                 <p class="mt-6 max-w-xl text-lg font-medium text-white/90 sm:text-xl">
                     Вставьте ссылку на вакансию — ИИ напишет объявление и нарисует картинку, а мы покажем его тысячам кандидатов в Яндексе, ВКонтакте и Одноклассниках.
                 </p>
-                <div class="mt-8 flex flex-wrap gap-3">
+                <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                     <a href="{{ route('login') }}" class="btn bg-white px-7 py-4 text-lg text-fuchsia-700 shadow-2xl shadow-fuchsia-900/30 hover:-translate-y-0.5">Запустить за 5 минут →</a>
                     <a href="#how" class="btn bg-white/15 px-7 py-4 text-lg text-white ring-1 ring-white/40 backdrop-blur hover:bg-white/25">Как это работает</a>
                 </div>
                 <div class="mt-10 grid max-w-xl grid-cols-3 gap-3">
                     @foreach ([['от '.Money::format($cpcDefault), 'за клик кандидата'], ['5 площадок', 'Яндекс и VK сразу'], ['5 минут', 'на запуск кампании']] as [$big, $small])
                         <div class="rounded-2xl bg-white/15 p-4 ring-1 ring-white/25 backdrop-blur">
-                            <div class="font-display text-base font-black whitespace-nowrap sm:text-xl">{{ $big }}</div>
+                            <div class="font-display text-sm font-black sm:text-xl sm:whitespace-nowrap">{{ $big }}</div>
                             <div class="text-xs font-semibold text-white/80 sm:text-sm">{{ $small }}</div>
                         </div>
                     @endforeach
                 </div>
             </div>
-            <div class="text-ink">
+            <div class="min-w-0 text-ink">
                 <livewire:landing.calculator />
             </div>
         </div>

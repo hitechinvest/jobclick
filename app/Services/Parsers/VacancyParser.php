@@ -135,6 +135,7 @@ class VacancyParser
         if ($vacancy->logo) {
             $vacancy->images[] = $vacancy->logo;
         }
+
         return $vacancy;
     }
 

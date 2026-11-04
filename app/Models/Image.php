@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ImageService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +26,6 @@ class Image extends Model
     /** Подходит ли картинка для рекламных сетей (минимальные размеры из настроек). */
     public function isSuitable(): bool
     {
-        return \App\Services\ImageService::isSuitable($this->width, $this->height);
+        return ImageService::isSuitable($this->width, $this->height);
     }
 }

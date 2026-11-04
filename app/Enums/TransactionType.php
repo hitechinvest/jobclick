@@ -2,8 +2,15 @@
 
 namespace App\Enums;
 
-enum TransactionType: string
+use Filament\Support\Contracts\HasLabel;
+
+enum TransactionType: string implements HasLabel
 {
+    public function getLabel(): string
+    {
+        return $this->label();
+    }
+
     case Topup = 'topup';
     case Reserve = 'reserve';
     case Release = 'release';

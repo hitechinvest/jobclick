@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Cabinet;
 
+use App\Models\Creative;
 use App\Models\Image;
 use App\Services\ImageService;
 use App\Services\Integrations\IntegrationException;
@@ -41,7 +42,7 @@ class Library extends Component
     public function delete(int $id): void
     {
         $image = Image::where('user_id', auth()->id())->findOrFail($id);
-        if ($image->id && \App\Models\Creative::where('image_id', $image->id)->exists()) {
+        if ($image->id && Creative::where('image_id', $image->id)->exists()) {
             session()->flash('error', 'Картинка используется в кампании — её нельзя удалить');
 
             return;

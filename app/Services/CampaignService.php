@@ -7,6 +7,7 @@ use App\Mail\CampaignStatusMail;
 use App\Models\Campaign;
 use App\Models\CampaignPlatform;
 use App\Models\User;
+use App\Support\Settings;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -26,8 +27,8 @@ class CampaignService
     public function validateForSubmit(Campaign $campaign): array
     {
         $errors = [];
-        $min = \App\Support\Settings::float('tariff.min_total_budget');
-        $minDaily = \App\Support\Settings::float('tariff.min_daily_budget');
+        $min = Settings::float('tariff.min_total_budget');
+        $minDaily = Settings::float('tariff.min_daily_budget');
 
         if (! $campaign->source_url) {
             $errors[] = 'Укажите ссылку на вакансию';

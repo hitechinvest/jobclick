@@ -74,7 +74,7 @@
     <tbody>
         <tr>
             <td class="right">1</td>
-            <td>Рекламные услуги: пополнение баланса в сервисе JobClick@if($invoice->campaign_id) (кампания #{{ $invoice->campaign_id }})@endif</td>
+            <td>Рекламные услуги: пополнение баланса в сервисе JobClick @if($invoice->campaign_id)(кампания #{{ $invoice->campaign_id }})@endif</td>
             <td class="right">1</td>
             <td>усл.</td>
             <td class="right">{{ $sum }}</td>

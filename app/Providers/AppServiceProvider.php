@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Yandex\Provider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configureFromSettings();
 
         Event::listen(function (SocialiteWasCalled $event) {
-            $event->extendSocialite('yandex', \SocialiteProviders\Yandex\Provider::class);
+            $event->extendSocialite('yandex', Provider::class);
             $event->extendSocialite('mailru', \SocialiteProviders\Mailru\Provider::class);
         });
     }
@@ -36,19 +37,7 @@ class AppServiceProvider extends ServiceProvider
             return;
         }
 
-        if (Settings::has('mail.host')) {
-            config([
-                'mail.default' => 'smtp',
-                'mail.mailers.smtp.scheme' => Settings::get('mail.scheme') ?: null,
-                'mail.mailers.smtp.host' => Settings::get('mail.host'),
-                'mail.mailers.smtp.port' => Settings::int('mail.port'),
-                'mail.mailers.smtp.username' => Settings::get('mail.username'),
-                'mail.mailers.smtp.password' => Settings::get('mail.password'),
-            ]);
-        }
-        if (Settings::has('mail.from_address')) {
-            config(['mail.from.address' => Settings::get('mail.from_address'), 'mail.from.name' => Settings::get('mail.from_name')]);
-        }
+        Settings::applyMailConfig();
 
         config([
             'services.yandex' => [
