@@ -1,0 +1,9 @@
+# Если веб-сервер (Apache) смотрит в корень проекта, а не в public/,
+# все запросы уходят в public/ — .env, vendor и исходники снаружи недоступны.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+<IfModule !mod_rewrite.c>
+    Require all denied
+</IfModule>

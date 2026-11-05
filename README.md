@@ -5,7 +5,8 @@ Self-service сервис рекламы вакансий в Яндекс Дир
 После оплаты кампания уходит на модерацию, админ одобряет её и размещает в сетях вручную.
 
 - План разработки: [docs/DEVELOPMENT_PLAN.md](docs/DEVELOPMENT_PLAN.md)
-- Стек: PHP 8.3, Laravel 12, MySQL 8, Filament 5 (админка), Livewire 4 + Tailwind 4 (сайт и кабинет). Без Redis, S3 и Docker.
+- Стек: PHP 8.2+, Laravel 12, MariaDB 10.6+ (подходит и MySQL 8), Filament 5 (админка), Livewire 4 + Tailwind 4 (сайт и кабинет). Без Redis, S3 и Docker.
+- Фронтенд собран и лежит в `public/build`: на сервере Node.js не нужен. После правок вёрстки выполните `npm run build` и закоммитьте результат.
 
 ## Что внутри
 
@@ -50,11 +51,33 @@ php artisan test
 ./vendor/bin/pint --test
 ```
 
+## Запуск на платформе sitegen
+
+Сайт создаётся в sitegen как обычный проект (например, `/var/www/sites/575`), база MariaDB — тоже в sitegen.
+Репозиторий приватный, поэтому скрипт `deploy/sitegen.sh` для первого запуска положите на сервер вручную: откройте его на GitHub, нажмите Raw, скопируйте и вставьте в `nano /tmp/sitegen.sh` (или `scp deploy/sitegen.sh сервер:/tmp/`). Затем:
+
+```bash
+sudo bash /tmp/sitegen.sh install /var/www/sites/575
+```
+
+Скрипт:
+- проверит PHP 8.2+ и расширения, при необходимости скачает Composer;
+- при первом запуске создаст deploy-ключ и покажет его — добавьте его в GitHub (Settings → Deploy keys) и запустите команду ещё раз;
+- уберёт заглушку sitegen в `.stub-backup`, загрузит код, спросит адрес сайта и доступы к базе, выполнит миграции и справочники, создаст администратора;
+- добавит планировщик в cron владельца папки (письма, сверка оплат, проверка вакансий) — supervisor не нужен;
+- проверит, что веб-сервер отдаёт папку `public/`, и подскажет, что поменять, если нет.
+
+Все команды выполняются от владельца папки сайта. Обновление после изменений в коде:
+
+```bash
+sudo bash /var/www/sites/575/deploy/sitegen.sh update /var/www/sites/575
+```
+
 ## Продакшен (один VPS)
 
-1. Ubuntu, nginx, PHP 8.3-FPM с расширениями `gd, intl, mbstring, zip, pdo_mysql`, MySQL 8, Node 22 для сборки.
-2. Конфиги: `deploy/nginx.conf`, `deploy/supervisor.conf` (воркер очереди писем), `deploy/crontab` (планировщик и бэкап).
-3. `.env`: `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://ваш-домен`, доступы к MySQL.
+1. Ubuntu, nginx, PHP 8.3-FPM с расширениями `gd, intl, mbstring, xml, curl, zip, mysql`, MariaDB 10.6+.
+2. Конфиги: `deploy/nginx.conf`, `deploy/crontab` (планировщик и бэкап). Воркер очереди запускается планировщиком, `deploy/supervisor.conf` — по желанию.
+3. `.env`: `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://ваш-домен`, `DB_CONNECTION=mariadb` и доступы к базе.
 4. Первый запуск: `php artisan migrate --seed`, `php artisan jobclick:admin …`, затем заполнить **Настройки** в админке.
 5. Обновление: `./deploy/deploy.sh`.
 6. В кабинете ЮKassa указать URL уведомлений `https://ваш-домен/webhooks/yookassa` (события `payment.succeeded`, `payment.canceled`).

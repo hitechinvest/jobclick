@@ -13,7 +13,6 @@
 /.zed
 /auth.json
 /node_modules
-/public/build
 /public/css/filament
 /public/fonts/filament
 /public/hot
@@ -25,3 +24,5 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/composer.phar
+/.stub-backup
